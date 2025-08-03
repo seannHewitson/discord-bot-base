@@ -1,7 +1,17 @@
 import { RealtimePostgresInsertPayload } from '@supabase/supabase-js'
-import { Client } from 'discord.js'
+import {
+  Client,
+  Collection,
+  CommandInteraction,
+  SlashCommandBuilder,
+} from 'discord.js'
 
 import { Database } from './supabase/types'
+
+export type Command = { data: SlashCommandBuilder; execute: Execute }
+type Execute = (interaction: CommandInteraction) => Promise<void>
+
+export type Commands = Collection<string, Command>
 
 export type Functions = Database['public']['Functions']
 

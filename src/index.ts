@@ -5,6 +5,7 @@ import { Collection } from 'discord.js'
 import { discordClient } from './client'
 import { config } from './config'
 import { deploy } from './deploy'
+import { Command } from './types'
 import { getFiles } from './utils/file'
 
 getFiles('events').then((files) => {
@@ -21,19 +22,18 @@ getFiles('events').then((files) => {
 })
 
 getFiles('commands').then(async (files) => {
-  const commands = new Collection<string, (...args: any[]) => Promise<void>>()
+  discordClient.commands = new Collection<string, Command>()
 
   files.forEach((file) => {
     if ('data' in file && 'execute' in file) {
       const { data, execute } = file as any
-      // @ts-expect-error
-      commands.set(data.name, { data, execute })
+      discordClient.commands.set(data.name, { data, execute })
     }
   })
 
-  console.log(`🔧 ${commands.size} commands loaded.`)
-  await deploy(commands)
-  return commands
+  console.log(`🔧 ${discordClient.commands.size} commands loaded.`)
+  await deploy(discordClient.commands)
+  return discordClient.commands
 })
 
 discordClient.login(config.discord.token)
