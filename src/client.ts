@@ -1,12 +1,6 @@
-import {
-  Client,
-  Collection,
-  CommandInteraction,
-  GatewayIntentBits,
-  SlashCommandBuilder,
-  SlashCommandOptionsOnlyBuilder,
-  SlashCommandSubcommandsOnlyBuilder,
-} from 'discord.js'
+import { Client, GatewayIntentBits } from 'discord.js'
+
+import { Commands } from './types'
 
 export const discordClient = new Client({
   intents: [
@@ -15,14 +9,5 @@ export const discordClient = new Client({
     GatewayIntentBits.MessageContent,
   ],
 }) as Client & {
-  commands: Collection<
-    string,
-    {
-      data:
-        | SlashCommandBuilder
-        | SlashCommandOptionsOnlyBuilder
-        | SlashCommandSubcommandsOnlyBuilder
-      execute: (interaction: CommandInteraction) => Promise<void>
-    }
-  >
+  commands: Commands
 }
